@@ -1,0 +1,5 @@
+Flask==0.12.3
+requests==2.21.0
+gym==0.7.4
+numpy
+pytest
