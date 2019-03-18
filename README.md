@@ -41,7 +41,7 @@ start_server(listen=='127.0.0.1', port==5000)
 
 ### Verify installation
 
-The package includes an example client and an example agent.
+The package includes an [example client](gym_http_server/example_client.py) and an [example agent](gym_http_server/example_agent.py).
 
 To check connectivity with the server, start the server and run in separate terminal
 
