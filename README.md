@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/saravanabalagi/gym-http-server.svg?branch=master)](https://travis-ci.org/saravanabalagi/gym-http-server)
 ![GitHub](https://img.shields.io/github/license/saravanabalagi/gym-http-server.svg)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/gym-http-server.svg)
 
 This project provides a local REST API to the [gym](https://github.com/openai/gym) open-source library, allowing development in languages other than python.
 
