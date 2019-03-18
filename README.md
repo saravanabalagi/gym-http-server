@@ -2,7 +2,9 @@
 
 This project provides a local REST API to the [gym](https://github.com/openai/gym) open-source library, allowing development in languages other than python.
 
-A python client is included, to demonstrate how to interact with the server.
+The package includes an [example client](gym_http_server/example_client.py) and an [example agent](gym_http_server/example_agent.py), to demonstrate how to interact with the server.
+
+![Screencast](screencast.gif)
 
 ## Installation
 
