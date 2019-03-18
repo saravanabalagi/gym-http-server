@@ -4,7 +4,7 @@ This project provides a local REST API to the [gym](https://github.com/openai/gy
 
 A python client is included, to demonstrate how to interact with the server.
 
-## Usage
+## Installation
 
 Install the package using pip:
 
@@ -12,15 +12,57 @@ Install the package using pip:
 pip install gym-http-server
 ```
 
+## Usage
+
+### Direct Usage
+
 Use it simply from anywhere by calling
 ```
 gym-http-server
 ```
 
-For more options and help, please see
+If you would like to run on a specific port, use `--listen` and `--port`
 ```
-gym-http-server --help
+gym-http-server -l 127.0.0.1 -p 5000
 ```
+
+### Pythonic Usage
+
+If you want to use this inside your python script,
+```
+from gym_http_server import start_server
+start_server()
+```
+
+If you want to specify ip and port,
+```
+start_server(listen=='127.0.0.1', port==5000)
+```
+
+### Verify installation
+
+The package includes an example client and an example agent.
+
+To check connectivity with the server, start the server and run in separate terminal
+
+```
+start gym-http-server           # windows
+gym-http-server &               # linux and mac
+```
+
+and then run example client to perform a single step in `CartPole-v0`
+
+```
+python -m gym_http_server.example_client
+```
+
+or the example agent to perform 100 episodes in the same environment
+
+```
+python -m gym_http_server.example_agent
+```
+
+And you can also check the logs stored at `tmp` folder.
 
 ## API specification
 

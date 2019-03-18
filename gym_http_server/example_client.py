@@ -142,20 +142,28 @@ class ServerError(Exception):
 
 if __name__ == '__main__':
     remote_base = 'http://127.0.0.1:5000'
+    print('Creating client for ' + remote_base)
     client = Client(remote_base)
 
     # Create environment
     env_id = 'CartPole-v0'
+    print('Creating environment '+env_id)
     instance_id = client.env_create(env_id)
 
     # Check properties
+    print('Checking properties')
     all_envs = client.env_list_all()
     action_info = client.env_action_space_info(instance_id)
     obs_info = client.env_observation_space_info(instance_id)
 
     # Run a single step
+    print('Running a single step')
     client.env_monitor_start(instance_id, directory='tmp', force=True)
     init_obs = client.env_reset(instance_id)
     [observation, reward, done, info] = client.env_step(instance_id, 1, True)
+
+    print('Close monitoring')
     client.env_monitor_close(instance_id)
-    client.upload(training_dir='tmp')
+
+    # upload requires api key
+    # client.upload(training_dir='tmp')

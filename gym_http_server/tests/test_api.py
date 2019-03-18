@@ -7,7 +7,7 @@ import pytest
 from threading import Thread
 
 import gym_http_server
-from gym_http_server import gym_http_client
+from gym_http_server import example_client
 
 import logging
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ needs_api_key = pytest.mark.skipif(os.environ.get('OPENAI_GYM_API_KEY') is None,
 
 @with_server
 def test_create_destroy():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     assert instance_id in client.env_list_all()
     client.env_close(instance_id)
@@ -62,7 +62,7 @@ def test_create_destroy():
 
 @with_server
 def test_action_space_discrete():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     action_info = client.env_action_space_info(instance_id)
     assert action_info['name'] == 'Discrete'
@@ -70,14 +70,14 @@ def test_action_space_discrete():
 
 @with_server
 def test_action_space_sample():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     action = client.env_action_space_sample(instance_id)
     assert 0 <= action < 2
 
 @with_server
 def test_action_space_contains():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     action_info = client.env_action_space_info(instance_id)
     assert action_info['n'] == 2
@@ -87,7 +87,7 @@ def test_action_space_contains():
 
 @with_server
 def test_observation_space_box():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     obs_info = client.env_observation_space_info(instance_id)
     assert obs_info['name'] == 'Box'
@@ -98,7 +98,7 @@ def test_observation_space_box():
 
 @with_server
 def test_observation_space_contains():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     obs_info = client.env_observation_space_info(instance_id)
     assert obs_info['name'] == 'Box'
@@ -108,7 +108,7 @@ def test_observation_space_contains():
 
 @with_server
 def test_reset():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
 
     instance_id = client.env_create('CartPole-v0')
     init_obs = client.env_reset(instance_id)
@@ -120,7 +120,7 @@ def test_reset():
 
 @with_server
 def test_step():
-   client = gym_http_client.Client(get_remote_base())
+   client = example_client.Client(get_remote_base())
 
    instance_id = client.env_create('CartPole-v0')
    client.env_reset(instance_id)
@@ -141,7 +141,7 @@ def test_monitor_start_close_upload():
     assert os.environ.get('OPENAI_GYM_API_KEY')
         # otherwise test is invalid
 
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     instance_id = client.env_create('CartPole-v0')
     client.env_monitor_start(instance_id, 'tmp', force=True)
     client.env_reset(instance_id)
@@ -154,7 +154,7 @@ def test_monitor_start_close_upload():
 @with_server
 def test_bad_instance_id():
     ''' Test all methods that use instance_id with an invalid ID'''
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     try_these = [lambda x: client.env_reset(x),
                  lambda x: client.env_step(x, 1),
                  lambda x: client.env_action_space_info(x),
@@ -165,7 +165,7 @@ def test_bad_instance_id():
     for call in try_these:
         try:
             call('bad_id')
-        except gym_http_client.ServerError as e:
+        except example_client.ServerError as e:
             assert 'Instance_id' in e.message
             assert e.status_code == 400
         else:
@@ -174,7 +174,7 @@ def test_bad_instance_id():
 @with_server
 def test_missing_param_env_id():
     ''' Test client failure to provide JSON param: env_id'''
-    class BadClient(gym_http_client.Client):
+    class BadClient(example_client.Client):
         def env_create(self, env_id):
             route = '/v1/envs/'
             data = {} # deliberately omit env_id
@@ -184,7 +184,7 @@ def test_missing_param_env_id():
     client = BadClient(get_remote_base())
     try:
         client.env_create('CartPole-v0')
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'env_id' in e.message
         assert e.status_code == 400
     else:
@@ -193,7 +193,7 @@ def test_missing_param_env_id():
 @with_server
 def test_missing_param_action():
     ''' Test client failure to provide JSON param: action'''
-    class BadClient(gym_http_client.Client):
+    class BadClient(example_client.Client):
         def env_step(self, instance_id, action):
             route = '/v1/envs/{}/step/'.format(instance_id)
             data = {} # deliberately omit action
@@ -209,7 +209,7 @@ def test_missing_param_action():
     client.env_reset(instance_id)
     try:
         client.env_step(instance_id, 1)
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'action' in e.message
         assert e.status_code == 400
     else:
@@ -218,7 +218,7 @@ def test_missing_param_action():
 @with_server
 def test_missing_param_monitor_directory():
     ''' Test client failure to provide JSON param: directory'''
-    class BadClient(gym_http_client.Client):
+    class BadClient(example_client.Client):
         def env_monitor_start(self, instance_id, directory,
                               force=False, resume=False):
             route = '/v1/envs/{}/monitor/start/'.format(instance_id)
@@ -230,7 +230,7 @@ def test_missing_param_monitor_directory():
     instance_id = client.env_create('CartPole-v0')
     try:
         client.env_monitor_start(instance_id, 'tmp', force=True)
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'directory' in e.message
         assert e.status_code == 400
     else:
@@ -240,7 +240,7 @@ def test_missing_param_monitor_directory():
 @with_server
 def test_missing_param_upload_directory():
     ''' Test client failure to provide JSON param: directory'''
-    class BadClient(gym_http_client.Client):
+    class BadClient(example_client.Client):
         def upload(self, training_dir, algorithm_id=None, api_key=None):
             if not api_key:
                 api_key = os.environ.get('OPENAI_GYM_API_KEY')
@@ -262,7 +262,7 @@ def test_missing_param_upload_directory():
     client.env_monitor_close(instance_id)
     try:
         client.upload('tmp')
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'training_dir' in e.message
         assert e.status_code == 400
     else:
@@ -271,7 +271,7 @@ def test_missing_param_upload_directory():
 @with_server
 def test_empty_param_api_key():
     ''' Test client failure to provide non-empty JSON param: api_key'''
-    class BadClient(gym_http_client.Client):
+    class BadClient(example_client.Client):
         def upload(self, training_dir, algorithm_id=None, api_key=None):
             route = '/v1/upload/'
             data = {'algorithm_id': algorithm_id,
@@ -286,7 +286,7 @@ def test_empty_param_api_key():
     client.env_monitor_close(instance_id)
     try:
         client.upload('tmp')
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'api_key' in e.message
         assert e.status_code == 400
     else:
@@ -297,10 +297,10 @@ def test_empty_param_api_key():
 
 @with_server
 def test_create_malformed():
-    client = gym_http_client.Client(get_remote_base())
+    client = example_client.Client(get_remote_base())
     try:
         client.env_create('bad string')
-    except gym_http_client.ServerError as e:
+    except example_client.ServerError as e:
         assert 'malformed environment ID' in e.message
         assert e.status_code == 400
     else:
@@ -308,7 +308,7 @@ def test_create_malformed():
 
 # @with_server
 # def test_missing_API_key():
-#    client = gym_http_client.Client(get_remote_base())
+#    client = example_client.Client(get_remote_base())
 #    cur_key = os.environ.get('OPENAI_GYM_API_KEY')
 #    os.environ['OPENAI_GYM_API_KEY'] = ''
 #    try:
