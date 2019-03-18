@@ -31,5 +31,5 @@ setup(
     },
     packages=["gym_http_server"],
     include_package_data=True,
-    install_requires=["Flask==0.11.1", "numpy", "gym==0.7.4", "requests==2.11.0", "pytest"]
+    install_requires=["Flask==0.12.3", "numpy", "gym==0.7.4", "requests==2.21.0", "pytest"]
 )

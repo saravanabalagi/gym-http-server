@@ -105,7 +105,8 @@ gym-http-server --help
       * Request a server shutdown
       * Currently used by the integration tests to repeatedly create and destroy fresh copies of the server running in a separate thread
 
-Forked from https://github.com/openai/gym-http-api.
+
+Forked from the archived [gym-http-api](https://github.com/openai/gym-http-api)
 
 
 ## Licence
