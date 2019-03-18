@@ -8,7 +8,7 @@ A python client is included, to demonstrate how to interact with the server.
 
 Install the package using pip:
 
-```
+```sh
 pip install gym-http-server
 ```
 
@@ -17,25 +17,25 @@ pip install gym-http-server
 ### Direct Usage
 
 Use it simply from anywhere by calling
-```
+```sh
 gym-http-server
 ```
 
 If you would like to run on a specific port, use `--listen` and `--port`
-```
+```sh
 gym-http-server -l 127.0.0.1 -p 5000
 ```
 
 ### Pythonic Usage
 
 If you want to use this inside your python script,
-```
+```python
 from gym_http_server import start_server
 start_server()
 ```
 
 If you want to specify ip and port,
-```
+```python
 start_server(listen=='127.0.0.1', port==5000)
 ```
 
@@ -45,20 +45,20 @@ The package includes an example client and an example agent.
 
 To check connectivity with the server, start the server and run in separate terminal
 
-```
+```sh
 start gym-http-server           # windows
 gym-http-server &               # linux and mac
 ```
 
 and then run example client to perform a single step in `CartPole-v0`
 
-```
+```sh
 python -m gym_http_server.example_client
 ```
 
 or the example agent to perform 100 episodes in the same environment
 
-```
+```sh
 python -m gym_http_server.example_agent
 ```
 
